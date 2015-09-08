@@ -57,7 +57,7 @@ func Internal_WithCacheControl(ctx context.Context) (context.Context, *CacheCont
 // code-genned CachedXyzServer wrapper methods. It should not be
 // called by user code.
 func Internal_SetCacheControlTrailer(ctx context.Context, cc CacheControl) error {
-	return grpc.SetTrailer(ctx, metadata.MD{"cache-control:max-age": cc.MaxAge.String()})
+	return grpc.SetTrailer(ctx, metadata.MD{"cache-control:max-age": []string{cc.MaxAge.String()}})
 }
 
 // TODO(sqs): warn if nil?
@@ -70,8 +70,9 @@ func cacheControlFromContext(ctx context.Context) *CacheControl {
 // server's CacheControl response metadata.
 func cacheControlFromMetadata(md metadata.MD) (*CacheControl, error) {
 	var cc *CacheControl
-	if maxAgeStr, present := md["cache-control:max-age"]; present {
-		maxAge, err := time.ParseDuration(maxAgeStr)
+	if maxAgeStrs, present := md["cache-control:max-age"]; present && len(maxAgeStrs) > 0 {
+		// Take the last value assuming that it is the most recently set one.
+		maxAge, err := time.ParseDuration(maxAgeStrs[len(maxAgeStrs)-1])
 		if err != nil {
 			return nil, err
 		}
