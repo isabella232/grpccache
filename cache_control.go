@@ -71,7 +71,8 @@ func cacheControlFromContext(ctx context.Context) *CacheControl {
 func cacheControlFromMetadata(md metadata.MD) (*CacheControl, error) {
 	var cc *CacheControl
 	if maxAgeStrs, present := md["cache-control:max-age"]; present && len(maxAgeStrs) > 0 {
-		maxAge, err := time.ParseDuration(maxAgeStrs[0])
+		// Take the last value assuming that it is the most recently set one.
+		maxAge, err := time.ParseDuration(maxAgeStrs[len(maxAgeStrs)-1])
 		if err != nil {
 			return nil, err
 		}
