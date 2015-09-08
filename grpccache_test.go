@@ -8,8 +8,8 @@ import (
 
 	"strconv"
 
-	"sourcegraph.com/sqs/grpccache"
-	"sourcegraph.com/sqs/grpccache/testpb"
+	"sourcegraph.com/sourcegraph/grpccache"
+	"sourcegraph.com/sourcegraph/grpccache/testpb"
 
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"

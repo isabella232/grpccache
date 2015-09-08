@@ -173,7 +173,7 @@ func (v genTypeList) imports() []string {
 	imps = append(imps, "google.golang.org/grpc")
 	imps = append(imps, "google.golang.org/grpc/metadata")
 	imps = append(imps, "golang.org/x/net/context")
-	imps = append(imps, "sourcegraph.com/sqs/grpccache")
+	imps = append(imps, "sourcegraph.com/sourcegraph/grpccache")
 
 	sort.Strings(imps)
 	return imps
@@ -200,7 +200,7 @@ func write(genTypes []genType, outPkg string) ([]byte, error) {
 	fmt.Fprintln(&w)
 	fmt.Fprintln(&w, "import (")
 	for _, imp := range genTypeList(genTypes).imports() {
-		if imp == "sourcegraph.com/sqs/grpccache/testpb" {
+		if imp == "sourcegraph.com/sourcegraph/grpccache/testpb" {
 			// HACK(sqs): skip self; hardcoded currently
 			continue
 		}
