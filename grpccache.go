@@ -67,7 +67,7 @@ func (c *Cache) cacheKey(ctx context.Context, method string, arg proto.Message) 
 // there's no cached result (or it has expired), then (false, nil) is
 // returned. Otherwise a non-nil error is returned.
 func (c *Cache) Get(ctx context.Context, method string, arg proto.Message, result proto.Message) (cached bool, err error) {
-	if getNoCache(ctx) {
+	if GetNoCache(ctx) {
 		return false, nil
 	}
 
@@ -107,7 +107,7 @@ func (c *Cache) Get(ctx context.Context, method string, arg proto.Message, resul
 // Store records the result from a gRPC method call. It is called by
 // the CachedXyzClient auto-generated wrapper methods.
 func (c *Cache) Store(ctx context.Context, method string, arg proto.Message, result proto.Message, trailer metadata.MD) error {
-	if getNoCache(ctx) {
+	if GetNoCache(ctx) {
 		return nil
 	}
 
@@ -183,14 +183,14 @@ func (c *Cache) Clear() {
 // NoCache causes all calls made with the returned ctx to bypass the
 // cache. The result will not be retrieved from nor stored in the
 // cache.
-//
-// TODO(sqs): propagate NoCache to the server for aggregate
-// operations.
 func NoCache(ctx context.Context) context.Context {
 	return context.WithValue(ctx, noCacheKey, struct{}{})
 }
 
-func getNoCache(ctx context.Context) bool {
+// GetNoCache returns true if the calls made with the current ctx
+// should bypass the cache, which depends on whether the noCacheKey
+// was previously set via NoCache(ctx).
+func GetNoCache(ctx context.Context) bool {
 	_, ok := ctx.Value(noCacheKey).(struct{})
 	return ok
 }
