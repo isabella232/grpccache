@@ -1,6 +1,7 @@
 package grpccache
 
 import (
+	"sync"
 	"time"
 
 	"golang.org/x/net/context"
@@ -12,17 +13,23 @@ import (
 // underlying server's method implementation to allow control over the
 // duration and nature of caching on a per-request basis.
 type CacheControl struct {
+	sync.RWMutex
+
 	// MaxAge is maximum duration (since the original retrieval) that
 	// an item is considered fresh.
 	MaxAge time.Duration
 }
 
 func (cc *CacheControl) cacheable() bool {
+	cc.RLock()
+	defer cc.RUnlock()
 	return cc.MaxAge > 0
 }
 
 // IsZero returns true if cc refers to an empty CacheControl struct.
 func (cc *CacheControl) IsZero() bool {
+	cc.RLock()
+	defer cc.RUnlock()
 	return *cc == CacheControl{}
 }
 
@@ -41,7 +48,9 @@ func (cc *CacheControl) IsZero() bool {
 func SetCacheControl(ctx context.Context, cc CacheControl) {
 	existingCC := cacheControlFromContext(ctx)
 	if existingCC != nil {
-		*existingCC = cc
+		existingCC.Lock()
+		existingCC.MaxAge = cc.MaxAge
+		existingCC.Unlock()
 	}
 }
 
