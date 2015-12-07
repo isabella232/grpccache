@@ -170,8 +170,8 @@ func (c *Cache) Store(ctx context.Context, method string, arg proto.Message, res
 }
 
 // cleanOldEntries removes expired entries from the cache. It does so in a
-// separate goroutine and only once every 10 seconds. The method assumes that
-// the cache mutex is locked.
+// separate goroutine and only once every 10 seconds. The caller must be
+// holding the Cache.mu lock.
 func (c *Cache) cleanOldEntries() {
 	now := time.Now()
 	if now.After(c.lastClean.Add(10 * time.Second)) {
