@@ -139,6 +139,8 @@ func TestGRPCCache(t *testing.T) {
 	c.Cache.KeyPart = nil
 
 	// Test NoCache
+	testNotCached(&testpb.TestOp{A: 500}, nil)
+	testCached(&testpb.TestOp{A: 500}, nil)
 	testNotCached(&testpb.TestOp{A: 500}, grpccache.NoCache)
 	testNotCached(&testpb.TestOp{A: 500}, grpccache.NoCache)
 }
