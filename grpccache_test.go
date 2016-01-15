@@ -31,7 +31,7 @@ func TestGRPCCache(t *testing.T) {
 	}()
 	defer gs.Stop()
 
-	cc, err := grpc.Dial(l.Addr().String())
+	cc, err := grpc.Dial(l.Addr().String(), grpc.WithInsecure())
 	if err != nil {
 		t.Fatal(err)
 	}
