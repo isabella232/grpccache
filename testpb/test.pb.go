@@ -16,6 +16,8 @@ It has these top-level messages:
 package testpb
 
 import proto "github.com/golang/protobuf/proto"
+import fmt "fmt"
+import math "math"
 
 import (
 	context "golang.org/x/net/context"
@@ -23,20 +25,23 @@ import (
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
-var _ context.Context
-var _ grpc.ClientConn
-
-// Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
+var _ = fmt.Errorf
+var _ = math.Inf
+
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the proto package it is being compiled against.
+const _ = proto.ProtoPackageIsVersion1
 
 type TestOp struct {
 	A int32 `protobuf:"varint,2,opt,name=a" json:"a,omitempty"`
 	B []*T  `protobuf:"bytes,3,rep,name=b" json:"b,omitempty"`
 }
 
-func (m *TestOp) Reset()         { *m = TestOp{} }
-func (m *TestOp) String() string { return proto.CompactTextString(m) }
-func (*TestOp) ProtoMessage()    {}
+func (m *TestOp) Reset()                    { *m = TestOp{} }
+func (m *TestOp) String() string            { return proto.CompactTextString(m) }
+func (*TestOp) ProtoMessage()               {}
+func (*TestOp) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{0} }
 
 func (m *TestOp) GetB() []*T {
 	if m != nil {
@@ -49,17 +54,29 @@ type T struct {
 	A bool `protobuf:"varint,1,opt,name=a" json:"a,omitempty"`
 }
 
-func (m *T) Reset()         { *m = T{} }
-func (m *T) String() string { return proto.CompactTextString(m) }
-func (*T) ProtoMessage()    {}
+func (m *T) Reset()                    { *m = T{} }
+func (m *T) String() string            { return proto.CompactTextString(m) }
+func (*T) ProtoMessage()               {}
+func (*T) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{1} }
 
 type TestResult struct {
 	X int32 `protobuf:"varint,1,opt,name=x" json:"x,omitempty"`
 }
 
-func (m *TestResult) Reset()         { *m = TestResult{} }
-func (m *TestResult) String() string { return proto.CompactTextString(m) }
-func (*TestResult) ProtoMessage()    {}
+func (m *TestResult) Reset()                    { *m = TestResult{} }
+func (m *TestResult) String() string            { return proto.CompactTextString(m) }
+func (*TestResult) ProtoMessage()               {}
+func (*TestResult) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{2} }
+
+func init() {
+	proto.RegisterType((*TestOp)(nil), "testpb.TestOp")
+	proto.RegisterType((*T)(nil), "testpb.T")
+	proto.RegisterType((*TestResult)(nil), "testpb.TestResult")
+}
+
+// Reference imports to suppress errors if they are not otherwise used.
+var _ context.Context
+var _ grpc.ClientConn
 
 // Client API for Test service
 
@@ -94,9 +111,9 @@ func RegisterTestServer(s *grpc.Server, srv TestServer) {
 	s.RegisterService(&_Test_serviceDesc, srv)
 }
 
-func _Test_TestMethod_Handler(srv interface{}, ctx context.Context, codec grpc.Codec, buf []byte) (interface{}, error) {
+func _Test_TestMethod_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error) (interface{}, error) {
 	in := new(TestOp)
-	if err := codec.Unmarshal(buf, in); err != nil {
+	if err := dec(in); err != nil {
 		return nil, err
 	}
 	out, err := srv.(TestServer).TestMethod(ctx, in)
@@ -116,4 +133,18 @@ var _Test_serviceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams: []grpc.StreamDesc{},
+}
+
+var fileDescriptor0 = []byte{
+	// 152 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xe2, 0xe2, 0x2a, 0x49, 0x2d, 0x2e,
+	0xd1, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x03, 0xb1, 0x0b, 0x92, 0x94, 0xf4, 0xb9, 0xd8,
+	0x42, 0x80, 0x2c, 0xff, 0x02, 0x21, 0x1e, 0x2e, 0xc6, 0x44, 0x09, 0x26, 0x05, 0x46, 0x0d, 0xd6,
+	0x20, 0xc6, 0x44, 0x21, 0x71, 0x2e, 0xc6, 0x24, 0x09, 0x66, 0x05, 0x66, 0x0d, 0x6e, 0x23, 0x4e,
+	0x3d, 0x88, 0x5a, 0xbd, 0x90, 0x20, 0xc6, 0x24, 0x25, 0x41, 0x2e, 0xc6, 0x10, 0x88, 0x5a, 0x46,
+	0xa0, 0x5a, 0x0e, 0xa0, 0x5a, 0x25, 0x29, 0x2e, 0x2e, 0x90, 0x19, 0x41, 0xa9, 0xc5, 0xa5, 0x39,
+	0x25, 0x20, 0xb9, 0x0a, 0xb0, 0x1c, 0xd0, 0x9c, 0x0a, 0x23, 0x0b, 0x2e, 0x16, 0x90, 0x9c, 0x90,
+	0x01, 0x44, 0x8d, 0x6f, 0x6a, 0x49, 0x46, 0x7e, 0x8a, 0x10, 0x1f, 0xdc, 0x48, 0xb0, 0xdd, 0x52,
+	0x42, 0xc8, 0x7c, 0x88, 0x39, 0x49, 0x6c, 0x60, 0x87, 0x1a, 0x03, 0x02, 0x00, 0x00, 0xff, 0xff,
+	0xe5, 0x37, 0x5b, 0xf1, 0xb6, 0x00, 0x00, 0x00,
 }
